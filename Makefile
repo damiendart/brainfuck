@@ -3,7 +3,7 @@
 # information, please refer to the accompanying "UNLICENCE" file.
 
 brainfuck: brainfuck.c
-	gcc -g -O2 -pendantic -std=c99 -Wall -Wextra -Werror $< -o $@
+	gcc -O2 -pendantic -std=c99 -Wall -Wextra -Werror $< -o $@
 .PHONY: clean
 clean:
 	rm -f brainfuck 
