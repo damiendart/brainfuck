@@ -2,8 +2,11 @@
 # and unencumbered software released into the public domain. For more
 # information, please refer to the accompanying "UNLICENCE" file.
 
-brainfuck: src/brainfuck.c
-	gcc -O2 -pendantic -std=c99 -Wall -Wextra -Werror $< -o $@
 .PHONY: clean
+all: brainfuck brainfuck-debug
+brainfuck: src/brainfuck.c
+	$(CC) -O2 -pendantic -std=c99 -Wall -Wextra -Werror $< -o $@
+brainfuck-debug: src/brainfuck.c
+	$(CC) -g -O -pendantic -std=c99 -Wall -Wextra -Werror $< -o $@
 clean:
-	rm -f brainfuck 
+	rm -f brainfuck brainfuck-debug
