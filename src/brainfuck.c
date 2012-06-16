@@ -6,6 +6,7 @@
  * information, please refer to the accompanying "UNLICENCE" file.
 */
 
+#include <errno.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,12 +20,18 @@ int main(void)
   while((character = getchar()) != EOF) {
     if ((character == '>') || (character == '<') || (character == '+') ||
         (character == '-') || (character == '.') || (character == ',') ||
-        (character == '[') || (character == ']')) { 
-      commands = realloc(commands, ++number_of_commands * sizeof(char)); 
+        (character == '[') || (character == ']')) {
+      char *temp = realloc(commands, ++number_of_commands * sizeof(char));
+      if (temp == NULL) {
+        free(commands);
+        perror("Unable to create command list");
+        exit(EXIT_FAILURE);
+      }
+      commands = temp;
       commands[number_of_commands - 1] = character;
     }
   }
-  commands = realloc(commands, ++number_of_commands * sizeof(char)); 
+  commands = realloc(commands, ++number_of_commands * sizeof(char));
   commands[number_of_commands - 1] = '\0';
   char data[30000] = { 0 };
   char *data_pointer = data;
@@ -80,5 +87,6 @@ int main(void)
     }
     current_command++;
   }
+  free(commands);
   return EXIT_SUCCESS;
 }
