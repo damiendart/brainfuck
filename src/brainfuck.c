@@ -1,38 +1,10 @@
-/*
- * A simple Brainfuck interpreter.
- *
- * This file was written by Damien Dart, <damiendart@pobox.com>. This is free
- * and unencumbered software released into the public domain. For more
- * information, please refer to the accompanying "UNLICENCE" file.
-*/
-
-#include <errno.h>
-#include <stdint.h>
 #include <stdio.h>
-#include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
+#include "brainfuck.h"
 
-int main(void)
+void brainfuck_evaluate(char *commands)
 {
-  char character = 0;
-  char *commands = NULL;
-  uint32_t number_of_commands = 0;
-  while((character = getchar()) != EOF) {
-    if ((character == '>') || (character == '<') || (character == '+') ||
-        (character == '-') || (character == '.') || (character == ',') ||
-        (character == '[') || (character == ']')) {
-      char *temp = realloc(commands, ++number_of_commands * sizeof(char));
-      if (temp == NULL) {
-        free(commands);
-        perror("Unable to create command list");
-        exit(EXIT_FAILURE);
-      }
-      commands = temp;
-      commands[number_of_commands - 1] = character;
-    }
-  }
-  commands = realloc(commands, ++number_of_commands * sizeof(char));
-  commands[number_of_commands - 1] = '\0';
   char data[30000] = { 0 };
   char *data_pointer = data;
   uint32_t current_command = 0;
@@ -87,6 +59,4 @@ int main(void)
     }
     current_command++;
   }
-  free(commands);
-  return EXIT_SUCCESS;
 }

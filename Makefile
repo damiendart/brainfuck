@@ -4,9 +4,9 @@
 
 .PHONY: clean
 all: brainfuck brainfuck-debug
-brainfuck: src/brainfuck.c
-	$(CC) -O2 -pendantic -std=c99 -Wall -Wextra -Werror $< -o $@
-brainfuck-debug: src/brainfuck.c
-	$(CC) -g -O -pendantic -std=c99 -Wall -Wextra -Werror $< -o $@
+brainfuck: src/brainfuck-interpreter.c src/brainfuck.c src/brainfuck.h
+	$(CC) -O2 -pendantic -std=c99 -Wall -Wextra -Werror $^ -o $@
+brainfuck-debug: src/brainfuck-interpreter.c src/brainfuck.c src/brainfuck.h
+	$(CC) -g -O -pendantic -std=c99 -Wall -Wextra -Werror $^ -o $@
 clean:
 	rm -f brainfuck brainfuck-debug
