@@ -14,28 +14,31 @@
 
 #include "brainfuck.h"
 
+void *realloc2(void *, size_t);
+
 int main(void)
 {
   char character = 0;
   char *commands = NULL;
   uint32_t number_of_commands = 0;
   while((character = getchar()) != EOF) {
-    if ((character == '>') || (character == '<') || (character == '+') ||
-        (character == '-') || (character == '.') || (character == ',') ||
-        (character == '[') || (character == ']')) {
-      char *temp = realloc(commands, ++number_of_commands * sizeof(char));
-      if (temp == NULL) {
-        free(commands);
-        perror("Unable to create command list");
-        exit(EXIT_FAILURE);
-      }
-      commands = temp;
-      commands[number_of_commands - 1] = character;
-    }
+    commands = realloc2(commands, ++number_of_commands * sizeof(char));
+    commands[number_of_commands - 1] = character;
   }
-  commands = realloc(commands, ++number_of_commands * sizeof(char));
+  commands = realloc2(commands, ++number_of_commands * sizeof(char));
   commands[number_of_commands - 1] = '\0';
   brainfuck_evaluate(commands);
   free(commands);
   return EXIT_SUCCESS;
+}
+
+void *realloc2(void *ptr, size_t size)
+{
+  char *new_obj = realloc(ptr, size);
+  if (new_obj == NULL) {
+    free(ptr);
+    strerror(errno);
+    exit(EXIT_FAILURE);
+  }
+  return new_obj;
 }
