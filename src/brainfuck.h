@@ -7,6 +7,17 @@
 #ifndef BRAINFUCK_H
 #define BRAINFUCK_H
 
-void brainfuck_evaluate(char *);
+#include <stdint.h>
+
+struct brainfuck_state {
+  char *data;
+  char *data_pointer;
+};
+
+typedef struct brainfuck_state brainfuck_state;
+
+brainfuck_state *brainfuck_createState(uint32_t);
+void brainfuck_evaluate(brainfuck_state *, char *);
+void brainfuck_freeState(brainfuck_state *);
 
 #endif

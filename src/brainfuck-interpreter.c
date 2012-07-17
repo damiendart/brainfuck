@@ -27,7 +27,9 @@ int main(void)
   }
   commands = realloc2(commands, ++number_of_commands * sizeof(char));
   commands[number_of_commands - 1] = '\0';
-  brainfuck_evaluate(commands);
+  brainfuck_state *state = brainfuck_createState(30000);
+  brainfuck_evaluate(state, commands);
+  brainfuck_freeState(state);
   free(commands);
   return EXIT_SUCCESS;
 }

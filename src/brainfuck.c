@@ -1,39 +1,50 @@
 #include <stdio.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <string.h>
+
 #include "brainfuck.h"
 
-void brainfuck_evaluate(char *commands)
+brainfuck_state *brainfuck_createState(uint32_t number_of_cells)
 {
-  char data[30000] = { 0 };
-  char *data_pointer = data;
-  uint32_t current_command = 0;
-  while (current_command < strlen(commands)) {
-    switch (commands[current_command]) {
+  brainfuck_state *state = malloc(sizeof(brainfuck_state));
+  state->data = malloc(number_of_cells * sizeof(char));
+  for (uint32_t i = 0; i < number_of_cells; i++) {
+    state->data[i] = 0;
+  }
+  state->data_pointer = state->data;
+  return state;
+}
+
+void brainfuck_evaluate(brainfuck_state *state, char *commands)
+{
+  uint32_t current_command_index = 0;
+  while (current_command_index < strlen(commands)) {
+    switch (commands[current_command_index]) {
       case '>':
-        data_pointer++;
+        state->data_pointer++;
         break;
       case '<':
-        data_pointer--;
+        state->data_pointer--;
         break;
       case '+':
-        ++*data_pointer;
+        ++*state->data_pointer;
         break;
       case '-':
-        --*data_pointer;
+        --*state->data_pointer;
         break;
       case '.':
-        putchar(*data_pointer);
+        putchar(*(state->data_pointer));
         break;
       case ',':
-        *data_pointer = getchar();
+        *(state->data_pointer) = getchar();
         break;
       case '[':
-        if (*data_pointer == 0) {
+        if (*(state->data_pointer) == 0) {
           uint32_t loop_depth = 1;
           char temp = 0;
           while (loop_depth > 0) {
-            temp = commands[++current_command];
+            temp = commands[++current_command_index];
             if (temp == '[') {
               loop_depth++;
             } else if (temp == ']') {
@@ -43,11 +54,11 @@ void brainfuck_evaluate(char *commands)
         }
         break;
       case ']':
-        if (*data_pointer != 0) {
+        if (*(state->data_pointer) != 0) {
           uint32_t loop_depth = 1;
           char temp = 0;
           while (loop_depth > 0) {
-            temp = commands[--current_command];
+            temp = commands[--current_command_index];
             if (temp == '[') {
               loop_depth--;
             } else if (temp == ']') {
@@ -57,6 +68,12 @@ void brainfuck_evaluate(char *commands)
         }
         break;
     }
-    current_command++;
+    current_command_index++;
   }
+}
+
+void brainfuck_freeState(brainfuck_state *state)
+{
+  free(state->data);
+  free(state);
 }
