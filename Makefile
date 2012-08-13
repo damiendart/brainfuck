@@ -5,8 +5,8 @@
 .PHONY: clean
 all: brainfuck brainfuck-debug
 brainfuck: src/brainfuck-interpreter.c src/brainfuck.c src/brainfuck.h
-	$(CC) -O2 -pendantic -std=c99 -Wall -Wextra -Werror $^ -o $@
+	$(CC) -O2 -pedantic -std=c99 -Wall -Wextra -Werror $^ -o $@
 brainfuck-debug: src/brainfuck-interpreter.c src/brainfuck.c src/brainfuck.h
-	$(CC) -g -O -pendantic -std=c99 -Wall -Wextra -Werror $^ -o $@
+	$(CC) -g -O -pedantic -std=c99 -Wall -Wextra -Werror $^ -o $@
 clean:
 	rm -f brainfuck brainfuck-debug
