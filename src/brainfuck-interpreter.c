@@ -29,13 +29,13 @@ int main(int argc, char **argv)
     } else if (argv[1][0] == '-') {
       fprintf(stderr, "Unrecognised option: %s\n", argv[1]);
       fprintf(stderr, "Try \"%s -h\" for more information.\n", argv[0]);
-      exit(EXIT_SUCCESS);
+      exit(EXIT_FAILURE);
     } else if ((brainfuck_stream = fopen(argv[1], "r")) == NULL) {
       fprintf(stderr, "Cannot open \"%s\": %s\n", argv[1], strerror(errno));
       exit(EXIT_FAILURE);
     }
   }
-  while(true) {
+  while (true) {
     int8_t character = getc(brainfuck_stream);
     uint8_t *new_commands = realloc(commands,
         ++number_of_commands * sizeof(uint8_t));
