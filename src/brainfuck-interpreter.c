@@ -6,7 +6,7 @@
  * information, please refer to the accompanying "UNLICENCE" file.
 */
 
-#include <errno.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,29 +18,27 @@ void *realloc2(void *, size_t);
 
 int main(void)
 {
-  int8_t character = 0;
   uint8_t *commands = NULL;
   uint32_t number_of_commands = 0;
-  while((character = getchar()) != EOF) {
-    commands = realloc2(commands, ++number_of_commands * sizeof(char));
-    commands[number_of_commands - 1] = character;
+  while(true) {
+    int8_t character = getchar();
+    uint8_t *new_commands = realloc(commands,
+        ++number_of_commands * sizeof(uint8_t));
+    if (new_commands == NULL) {
+      free(commands);
+      perror("Unable to create command list");
+      exit(EXIT_FAILURE);
+    } else {
+      commands = new_commands;
+    }
+    commands[number_of_commands - 1] = (character == EOF) ? '\0' : character;
+    if (character == EOF) {
+      break;
+    }
   }
-  commands = realloc2(commands, ++number_of_commands * sizeof(char));
-  commands[number_of_commands - 1] = '\0';
   brainfuck_state *state = brainfuck_createState(30000);
   brainfuck_evaluate(state, commands);
   brainfuck_freeState(state);
   free(commands);
   return EXIT_SUCCESS;
-}
-
-void *realloc2(void *ptr, size_t size)
-{
-  uint8_t *new_obj = realloc(ptr, size);
-  if (new_obj == NULL) {
-    free(ptr);
-    strerror(errno);
-    exit(EXIT_FAILURE);
-  }
-  return new_obj;
 }
