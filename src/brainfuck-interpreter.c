@@ -18,8 +18,8 @@ void *realloc2(void *, size_t);
 
 int main(void)
 {
-  char character = 0;
-  char *commands = NULL;
+  int8_t character = 0;
+  uint8_t *commands = NULL;
   uint32_t number_of_commands = 0;
   while((character = getchar()) != EOF) {
     commands = realloc2(commands, ++number_of_commands * sizeof(char));
@@ -36,7 +36,7 @@ int main(void)
 
 void *realloc2(void *ptr, size_t size)
 {
-  char *new_obj = realloc(ptr, size);
+  uint8_t *new_obj = realloc(ptr, size);
   if (new_obj == NULL) {
     free(ptr);
     strerror(errno);

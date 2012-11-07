@@ -16,10 +16,10 @@ brainfuck_state *brainfuck_createState(uint32_t number_of_cells)
   return state;
 }
 
-void brainfuck_evaluate(brainfuck_state *state, char *commands)
+void brainfuck_evaluate(brainfuck_state *state, uint8_t *commands)
 {
   uint32_t current_command_index = 0;
-  while (current_command_index < strlen(commands)) {
+  while (current_command_index < strlen((const char *)commands)) {
     switch (commands[current_command_index]) {
       case '>':
         state->data_pointer++;
