@@ -23,7 +23,10 @@ int main(int argc, char **argv)
   FILE *brainfuck_stream = stdin;
   if ((argc != 1) && (strcmp(argv[1], "-") != 0)) {
     if ((strcmp(argv[1], "-h") == 0) || (strcmp(argv[1], "--help") == 0)) {
-      printf("\"%s\" is a simple Brainfuck interpreter.\n", argv[0]);
+      printf("\"%s\" is a simple brainfuck interpreter.\n\n", argv[0]);
+      puts("  - brainfuck programs have access to 30,000 8-bit cells.");
+      puts("  - The cell array does not extend dynamically.");
+      printf("  - When accepting input, EOF is equal to %d.\n\n", EOF);
       printf("Usage: %s [options] [- | programfile]\n", argv[0]);
       puts("Options:\n  -h, --help    Print this message.");
       exit(EXIT_SUCCESS);
