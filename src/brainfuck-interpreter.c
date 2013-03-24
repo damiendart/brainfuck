@@ -19,6 +19,7 @@ int main(int argc, char **argv)
 {
   uint8_t *commands = NULL;
   uint32_t number_of_commands = 0;
+  brainfuck_state *state = brainfuck_createState(30000);
   FILE *brainfuck_stream = stdin;
   if ((argc != 1) && (strcmp(argv[1], "-") != 0)) {
     if ((strcmp(argv[1], "-h") == 0) || (strcmp(argv[1], "--help") == 0)) {
@@ -58,7 +59,6 @@ int main(int argc, char **argv)
   } else {
     fclose(brainfuck_stream);
   }
-  brainfuck_state *state = brainfuck_createState(30000);
   brainfuck_evaluate(state, commands);
   brainfuck_freeState(state);
   free(commands);
