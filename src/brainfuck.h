@@ -10,8 +10,8 @@
 #include <stdint.h>
 
 struct brainfuck_state {
-  char *data;
-  char *data_pointer;
+  int8_t *data;
+  int8_t *data_pointer;
 };
 
 typedef struct brainfuck_state brainfuck_state;

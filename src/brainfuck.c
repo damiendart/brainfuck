@@ -34,10 +34,10 @@ void brainfuck_evaluate(brainfuck_state *state, uint8_t *commands)
         --*state->data_pointer;
         break;
       case '.':
-        putchar(*(state->data_pointer));
+        putchar((char)*(state->data_pointer));
         break;
       case ',':
-        *(state->data_pointer) = getchar();
+        *(state->data_pointer) = (int8_t)getchar();
         break;
       case '[':
         if (*(state->data_pointer) == 0) {
