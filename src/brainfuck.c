@@ -5,21 +5,21 @@
 
 #include "brainfuck.h"
 
-brainfuck_state *brainfuck_createState(uint32_t number_of_cells)
+brainfuck_state *brainfuck_createState(unsigned int number_of_cells)
 {
   brainfuck_state *state = malloc(sizeof(brainfuck_state));
-  state->data = malloc(number_of_cells * sizeof(char));
-  for (uint32_t i = 0; i < number_of_cells; i++) {
+  state->data = malloc(number_of_cells * sizeof(int8_t));
+  for (unsigned int i = 0; i < number_of_cells; i++) {
     state->data[i] = 0;
   }
   state->data_pointer = state->data;
   return state;
 }
 
-void brainfuck_evaluate(brainfuck_state *state, uint8_t *commands)
+void brainfuck_evaluate(brainfuck_state *state, const char *commands)
 {
   uint32_t current_command_index = 0;
-  while (current_command_index < strlen((const char *)commands)) {
+  while (current_command_index < strlen(commands)) {
     switch (commands[current_command_index]) {
       case '>':
         state->data_pointer++;

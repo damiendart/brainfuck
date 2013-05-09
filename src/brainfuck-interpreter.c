@@ -17,8 +17,8 @@
 
 int main(int argc, char **argv)
 {
-  uint8_t *commands = NULL;
-  uint32_t number_of_commands = 0;
+  char *commands = NULL;
+  unsigned int number_of_commands = 0;
   brainfuck_state *state = brainfuck_createState(30000);
   FILE *brainfuck_stream = stdin;
   if ((argc != 1) && (strcmp(argv[1], "-") != 0)) {
@@ -40,9 +40,9 @@ int main(int argc, char **argv)
     }
   }
   while (true) {
-    int8_t character = getc(brainfuck_stream);
-    uint8_t *new_commands = realloc(commands,
-        ++number_of_commands * sizeof(uint8_t));
+    char character = getc(brainfuck_stream);
+    char *new_commands = realloc(commands,
+        ++number_of_commands * sizeof(char));
     if (new_commands == NULL) {
       free(commands);
       perror("Unable to create command list");

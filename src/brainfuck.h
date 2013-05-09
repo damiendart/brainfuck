@@ -16,8 +16,8 @@ struct brainfuck_state {
 
 typedef struct brainfuck_state brainfuck_state;
 
-brainfuck_state *brainfuck_createState(uint32_t);
-void brainfuck_evaluate(brainfuck_state *, uint8_t *);
+brainfuck_state *brainfuck_createState(unsigned int);
+void brainfuck_evaluate(brainfuck_state *, const char *);
 void brainfuck_freeState(brainfuck_state *);
 
 #endif
