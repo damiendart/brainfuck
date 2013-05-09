@@ -2,11 +2,16 @@
 # and unencumbered software released into the public domain. For more
 # information, please refer to the accompanying "UNLICENCE" file.
 
-.PHONY: clean
+INTERPRETER_SOURCES = src/brainfuck-interpreter.c src/brainfuck.c
+CFLAGS = -pedantic -std=c99 -Wall -Wextra -Werror
+
+.PHONY: all clean
 all: brainfuck brainfuck-debug
-brainfuck: src/brainfuck-interpreter.c src/brainfuck.c src/brainfuck.h
-	$(CC) -O2 -pedantic -std=c99 -Wall -Wextra -Werror $^ -o $@
-brainfuck-debug: src/brainfuck-interpreter.c src/brainfuck.c src/brainfuck.h
-	$(CC) -g -O -pedantic -std=c99 -Wall -Wextra -Werror $^ -o $@
+brainfuck: CFLAGS += -O2
+brainfuck: $(INTERPRETER_SOURCES)
+	$(CC) $(CFLAGS) $^ -o $@
+brainfuck-debug: CFLAGS += -g -O0
+brainfuck-debug: $(INTERPRETER_SOURCES)
+	$(CC) $(CFLAGS) $^ -o $@
 clean:
 	rm -f brainfuck brainfuck-debug
