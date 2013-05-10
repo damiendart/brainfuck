@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include "brainfuck.h"
 
@@ -18,23 +17,18 @@ brainfuck_state *brainfuck_createState(unsigned int number_of_cells)
 
 void brainfuck_evaluate(brainfuck_state *state, const char *commands)
 {
-  uint32_t current_command_index = 0;
-  while (current_command_index < strlen(commands)) {
-    switch (commands[current_command_index]) {
+  for (unsigned int index = 0; commands[index] != '\0'; index++) {
+    switch (commands[index]) {
       case '>':
-        state->data_pointer++;
-        break;
       case '<':
-        state->data_pointer--;
+        state->data_pointer += commands[index] == '>' ? 1 : -1;
         break;
       case '+':
-        ++*state->data_pointer;
-        break;
       case '-':
-        --*state->data_pointer;
+        *state->data_pointer += commands[index] == '+' ? 1 : -1;
         break;
       case '.':
-        putchar((char)*(state->data_pointer));
+        putchar((int)*(state->data_pointer));
         break;
       case ',':
         *(state->data_pointer) = (int8_t)getchar();
@@ -44,7 +38,7 @@ void brainfuck_evaluate(brainfuck_state *state, const char *commands)
           uint32_t loop_depth = 1;
           char temp = 0;
           while (loop_depth > 0) {
-            temp = commands[++current_command_index];
+            temp = commands[++index];
             if (temp == '[') {
               loop_depth++;
             } else if (temp == ']') {
@@ -58,7 +52,7 @@ void brainfuck_evaluate(brainfuck_state *state, const char *commands)
           uint32_t loop_depth = 1;
           char temp = 0;
           while (loop_depth > 0) {
-            temp = commands[--current_command_index];
+            temp = commands[--index];
             if (temp == '[') {
               loop_depth--;
             } else if (temp == ']') {
@@ -68,7 +62,6 @@ void brainfuck_evaluate(brainfuck_state *state, const char *commands)
         }
         break;
     }
-    current_command_index++;
   }
 }
 
