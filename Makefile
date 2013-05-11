@@ -15,3 +15,4 @@ brainfuck-debug: $(INTERPRETER_SOURCES)
 	$(CC) $(CFLAGS) $^ -o $@
 clean:
 	rm -f brainfuck brainfuck-debug
+	rm -rf brainfuck-debug.dSYM 
