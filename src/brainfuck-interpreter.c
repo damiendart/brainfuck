@@ -1,5 +1,5 @@
 /*
- * A simple Brainfuck interpreter.
+ * A simple brainfuck interpreter.
  *
  * This file was written by Damien Dart, <damiendart@pobox.com>. This is free
  * and unencumbered software released into the public domain. For more
