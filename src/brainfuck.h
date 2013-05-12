@@ -9,6 +9,7 @@
 #ifndef BRAINFUCK_H
 #define BRAINFUCK_H
 
+#include <stddef.h>
 #include <stdint.h>
 
 struct brainfuck_state {
@@ -18,8 +19,8 @@ struct brainfuck_state {
 
 typedef struct brainfuck_state brainfuck_state;
 
-brainfuck_state *brainfuck_createState(unsigned int);
-void brainfuck_evaluate(brainfuck_state *, const char *);
-void brainfuck_freeState(brainfuck_state *);
+brainfuck_state *brainfuck_createState(unsigned int, void *(size_t));
+void brainfuck_evaluate(brainfuck_state *, const char *, int(void), int(int));
+void brainfuck_freeState(brainfuck_state *, void(void *));
 
 #endif

@@ -6,16 +6,16 @@
  * information, please refer to the accompanying "UNLICENCE" file.
 */
 
-#include <stdio.h>
+#include <stddef.h>
 #include <stdint.h>
-#include <stdlib.h>
 
 #include "brainfuck.h"
 
-brainfuck_state *brainfuck_createState(unsigned int number_of_cells)
+brainfuck_state *brainfuck_createState(unsigned int number_of_cells,
+    void *(*allocator_function)(size_t))
 {
-  brainfuck_state *state = malloc(sizeof(brainfuck_state));
-  state->data = malloc(number_of_cells * sizeof(int8_t));
+  brainfuck_state *state = (*allocator_function)(sizeof(brainfuck_state));
+  state->data = (*allocator_function)(number_of_cells * sizeof(int8_t));
   for (unsigned int i = 0; i < number_of_cells; i++) {
     state->data[i] = 0;
   }
@@ -23,7 +23,8 @@ brainfuck_state *brainfuck_createState(unsigned int number_of_cells)
   return state;
 }
 
-void brainfuck_evaluate(brainfuck_state *state, const char *commands)
+void brainfuck_evaluate(brainfuck_state *state, const char *commands,
+    int (*input_function)(void), int (*output_function)(int))
 {
   for (unsigned int index = 0; commands[index] != '\0'; index++) {
     switch (commands[index]) {
@@ -36,10 +37,10 @@ void brainfuck_evaluate(brainfuck_state *state, const char *commands)
         *state->data_pointer += commands[index] == '+' ? 1 : -1;
         break;
       case '.':
-        putchar((int)*(state->data_pointer));
+        (*output_function)((int)*(state->data_pointer));
         break;
       case ',':
-        *(state->data_pointer) = (int8_t)getchar();
+        *(state->data_pointer) = (int8_t)(*input_function)();
         break;
       case '[':
         if (*(state->data_pointer) == 0) {
@@ -73,8 +74,8 @@ void brainfuck_evaluate(brainfuck_state *state, const char *commands)
   }
 }
 
-void brainfuck_freeState(brainfuck_state *state)
-{
-  free(state->data);
-  free(state);
+void brainfuck_freeState(brainfuck_state *state,
+    void (deallocator_function)(void *)) {
+  (*deallocator_function)(state->data);
+  (*deallocator_function)(state);
 }
