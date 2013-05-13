@@ -20,6 +20,7 @@ brainfuck_state *brainfuck_createState(unsigned int number_of_cells,
     state->data[i] = 0;
   }
   state->data_pointer = state->data;
+  state->cell_count = number_of_cells;
   return state;
 }
 

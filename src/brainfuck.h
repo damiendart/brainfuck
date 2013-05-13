@@ -12,12 +12,11 @@
 #include <stddef.h>
 #include <stdint.h>
 
-struct brainfuck_state {
+typedef struct brainfuck_state {
   int8_t *data;
   int8_t *data_pointer;
-};
-
-typedef struct brainfuck_state brainfuck_state;
+  unsigned int cell_count;
+} brainfuck_state;
 
 brainfuck_state *brainfuck_createState(unsigned int, void *(size_t));
 void brainfuck_evaluate(brainfuck_state *, const char *, int(void), int(int));
