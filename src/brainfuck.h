@@ -12,6 +12,15 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#define BRAINFUCK_EVALUATE_SUCCESS 0
+#define BRAINFUCK_EVALUATE_FAILURE 1
+
+typedef struct brainfuck_evaluate_status {
+  int return_code;
+  const char *error_message;
+  unsigned int offending_command_position;
+} brainfuck_evaluate_status;
+
 typedef struct brainfuck_state {
   int8_t *data;
   int8_t *data_pointer;
@@ -19,7 +28,8 @@ typedef struct brainfuck_state {
 } brainfuck_state;
 
 brainfuck_state *brainfuck_createState(unsigned int, void *(size_t));
-void brainfuck_evaluate(brainfuck_state *, const char *, int(void), int(int));
+brainfuck_evaluate_status brainfuck_evaluate(brainfuck_state *, const char *,
+    int(void), int(int));
 void brainfuck_freeState(brainfuck_state *, void(void *));
 
 #endif

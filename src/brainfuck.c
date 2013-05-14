@@ -24,14 +24,24 @@ brainfuck_state *brainfuck_createState(unsigned int number_of_cells,
   return state;
 }
 
-void brainfuck_evaluate(brainfuck_state *state, const char *commands,
-    int (*input_function)(void), int (*output_function)(int))
+brainfuck_evaluate_status brainfuck_evaluate(brainfuck_state *state,
+    const char *commands, int (*input_function)(void),
+    int (*output_function)(int))
 {
+  brainfuck_evaluate_status status = { BRAINFUCK_EVALUATE_SUCCESS, NULL, 0 };
   for (unsigned int index = 0; commands[index] != '\0'; index++) {
     switch (commands[index]) {
       case '>':
       case '<':
-        state->data_pointer += commands[index] == '>' ? 1 : -1;
+        state->data_pointer += (commands[index] == '>' ? 1 : -1);
+        if ((state->data_pointer < state->data) ||
+            (state->data_pointer) > (state->data + state->cell_count)) {
+          status.return_code = BRAINFUCK_EVALUATE_FAILURE;
+          status.error_message =
+              "Data pointer no longer points to any brainfuck data.";
+          status.offending_command_position = index;
+          return status;
+        }
         break;
       case '+':
       case '-':
@@ -73,6 +83,7 @@ void brainfuck_evaluate(brainfuck_state *state, const char *commands,
         break;
     }
   }
+  return status;
 }
 
 void brainfuck_freeState(brainfuck_state *state,
