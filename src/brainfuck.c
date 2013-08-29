@@ -11,20 +11,20 @@
 
 #include "brainfuck.h"
 
-brainfuck_state *brainfuck_createState(unsigned int number_of_cells,
+brainfuck_tape *brainfuck_createTape(unsigned int number_of_cells,
     void *(*allocator_function)(size_t))
 {
-  brainfuck_state *state = (*allocator_function)(sizeof(brainfuck_state));
-  state->data = (*allocator_function)(number_of_cells * sizeof(int8_t));
+  brainfuck_tape *tape = (*allocator_function)(sizeof(brainfuck_tape));
+  tape->data = (*allocator_function)(number_of_cells * sizeof(int8_t));
   for (unsigned int i = 0; i < number_of_cells; i++) {
-    state->data[i] = 0;
+    tape->data[i] = 0;
   }
-  state->data_pointer = state->data;
-  state->cell_count = number_of_cells;
-  return state;
+  tape->data_pointer = tape->data;
+  tape->cell_count = number_of_cells;
+  return tape;
 }
 
-brainfuck_evaluate_status brainfuck_evaluate(brainfuck_state *state,
+brainfuck_evaluate_status brainfuck_evaluate(brainfuck_tape *tape,
     const char *commands, int (*input_function)(void),
     int (*output_function)(int))
 {
@@ -33,49 +33,50 @@ brainfuck_evaluate_status brainfuck_evaluate(brainfuck_state *state,
     switch (commands[index]) {
       case '>':
       case '<':
-        state->data_pointer += (commands[index] == '>' ? 1 : -1);
-        if ((state->data_pointer < state->data) ||
-            (state->data_pointer) > (state->data + state->cell_count)) {
+        tape->data_pointer += (commands[index] == '>' ? 1 : -1);
+        if ((tape->data_pointer < tape->data) ||
+            (tape->data_pointer) > (tape->data + tape->cell_count)) {
           status.return_code = BRAINFUCK_EVALUATE_FAILURE;
           status.error_message =
-              "Data pointer no longer points to any brainfuck data.";
+              "Data cell pointer no longer points to a valid data cell.";
           status.offending_command_position = index;
           return status;
         }
         break;
       case '+':
       case '-':
-        *state->data_pointer += commands[index] == '+' ? 1 : -1;
+        *tape->data_pointer += commands[index] == '+' ? 1 : -1;
         break;
       case '.':
-        (*output_function)((int)*(state->data_pointer));
+        (*output_function)((int)*(tape->data_pointer));
         break;
       case ',':
-        *(state->data_pointer) = (int8_t)(*input_function)();
+        *(tape->data_pointer) = (int8_t)(*input_function)();
         break;
       case '[':
-        if (*(state->data_pointer) == 0) {
+        if (*(tape->data_pointer) == 0) {
           uint32_t loop_depth = 1;
-          char temp = 0;
           while (loop_depth > 0) {
-            temp = commands[++index];
-            if (temp == '[') {
+            if (commands[++index] == '[') {
               loop_depth++;
-            } else if (temp == ']') {
+            } else if (commands[index] == ']') {
               loop_depth--;
+            } else if (commands[index] == '\0') {
+              status.return_code = BRAINFUCK_EVALUATE_FAILURE;
+              status.error_message = "Open loop.";
+              status.offending_command_position = index;
+              return status;
             }
           }
         }
         break;
       case ']':
-        if (*(state->data_pointer) != 0) {
+        if (*(tape->data_pointer) != 0) {
           uint32_t loop_depth = 1;
-          char temp = 0;
           while (loop_depth > 0) {
-            temp = commands[--index];
-            if (temp == '[') {
+            if (commands[--index] == '[') {
               loop_depth--;
-            } else if (temp == ']') {
+            } else if (commands[index] == ']') {
               loop_depth++;
             }
           }
@@ -86,8 +87,8 @@ brainfuck_evaluate_status brainfuck_evaluate(brainfuck_state *state,
   return status;
 }
 
-void brainfuck_freeState(brainfuck_state *state,
+void brainfuck_freeTape(brainfuck_tape *tape,
     void (deallocator_function)(void *)) {
-  (*deallocator_function)(state->data);
-  (*deallocator_function)(state);
+  (*deallocator_function)(tape->data);
+  (*deallocator_function)(tape);
 }

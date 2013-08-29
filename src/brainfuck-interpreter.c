@@ -20,7 +20,7 @@ int main(int argc, char **argv)
   char *commands = NULL;
   unsigned int number_of_commands = 0;
   brainfuck_evaluate_status status;
-  brainfuck_state *state = brainfuck_createState(30000, malloc);
+  brainfuck_tape *tape = brainfuck_createTape(30000, malloc);
   FILE *brainfuck_stream = stdin;
   if ((argc != 1) && (strcmp(argv[1], "-") != 0)) {
     if ((strcmp(argv[1], "-h") == 0) || (strcmp(argv[1], "--help") == 0)) {
@@ -63,11 +63,11 @@ int main(int argc, char **argv)
   } else {
     fclose(brainfuck_stream);
   }
-  status = brainfuck_evaluate(state, commands, getchar, putchar);
+  status = brainfuck_evaluate(tape, commands, getchar, putchar);
   if (status.return_code != BRAINFUCK_EVALUATE_SUCCESS) {
     puts(status.error_message);
   }
-  brainfuck_freeState(state, free);
+  brainfuck_freeTape(tape, free);
   free(commands);
   return (status.return_code == BRAINFUCK_EVALUATE_SUCCESS ?
       EXIT_SUCCESS : EXIT_FAILURE);
