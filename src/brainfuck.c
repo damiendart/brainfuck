@@ -61,9 +61,10 @@ brainfuck_evaluate_status brainfuck_evaluate(brainfuck_tape *tape,
               loop_depth++;
             } else if (commands[index] == ']') {
               loop_depth--;
+            /* TODO: Open loops should be checked for beforehand. */
             } else if (commands[index] == '\0') {
               status.return_code = BRAINFUCK_EVALUATE_FAILURE;
-              status.error_message = "Open loop.";
+              status.error_message = "Unmatched \"[\".";
               status.offending_command_position = index;
               return status;
             }
@@ -78,6 +79,12 @@ brainfuck_evaluate_status brainfuck_evaluate(brainfuck_tape *tape,
               loop_depth--;
             } else if (commands[index] == ']') {
               loop_depth++;
+            /* TODO: Open loops should be checked for beforehand. */
+            } else if (index == 0) {
+              status.return_code = BRAINFUCK_EVALUATE_FAILURE;
+              status.error_message = "Unmatched \"]\".";
+              status.offending_command_position = index;
+              return status;
             }
           }
         }
