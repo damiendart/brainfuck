@@ -54,36 +54,22 @@ brainfuck_evaluate_status brainfuck_evaluate(brainfuck_tape *tape,
         *(tape->data_pointer) = (int8_t)(*input_function)();
         break;
       case '[':
-        if (*(tape->data_pointer) == 0) {
-          uint32_t loop_depth = 1;
-          while (loop_depth > 0) {
-            if (commands[++index] == '[') {
-              loop_depth++;
-            } else if (commands[index] == ']') {
-              loop_depth--;
-            /* TODO: Open loops should be checked for beforehand. */
-            } else if (commands[index] == '\0') {
-              status.return_code = BRAINFUCK_EVALUATE_FAILURE;
-              status.error_message = "Unmatched \"[\".";
-              status.offending_command_position = index;
-              return status;
-            }
-          }
-        }
-        break;
       case ']':
-        if (*(tape->data_pointer) != 0) {
-          uint32_t loop_depth = 1;
+        if ((*(tape->data_pointer) == 0 && commands[index] == '[') ||
+           (*(tape->data_pointer) != 0 && commands[index] == ']')) {
+          unsigned int loop_depth = 1;
+          unsigned int loop_start_index = index;
           while (loop_depth > 0) {
-            if (commands[--index] == '[') {
-              loop_depth--;
+            if (commands[commands[loop_start_index] == '[' ? ++index : --index]
+                  == '[') {
+              commands[loop_start_index] == '[' ? loop_depth++ : loop_depth--;
             } else if (commands[index] == ']') {
-              loop_depth++;
+              commands[loop_start_index] == '[' ? loop_depth-- : loop_depth++;
             /* TODO: Open loops should be checked for beforehand. */
-            } else if (index == 0) {
+            } else if (commands[index] == '\0' || index == 0) {
               status.return_code = BRAINFUCK_EVALUATE_FAILURE;
-              status.error_message = "Unmatched \"]\".";
-              status.offending_command_position = index;
+              status.error_message = "Unmatched \"[\" or \"]\".";
+              status.offending_command_position = loop_start_index;
               return status;
             }
           }
