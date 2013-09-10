@@ -15,17 +15,20 @@
 
 #include "brainfuck.h"
 
+#define NUMBER_OF_CELLS 30000
+
 int main(int argc, char **argv)
 {
   char *commands = NULL;
   unsigned int number_of_commands = 0;
   brainfuck_evaluate_status status;
-  brainfuck_tape *tape = brainfuck_createTape(30000, malloc);
+  brainfuck_tape *tape = brainfuck_createTape(NUMBER_OF_CELLS, malloc);
   FILE *brainfuck_stream = stdin;
   if ((argc != 1) && (strcmp(argv[1], "-") != 0)) {
     if ((strcmp(argv[1], "-h") == 0) || (strcmp(argv[1], "--help") == 0)) {
       printf("\"%s\" is a simple brainfuck interpreter.\n\n", argv[0]);
-      puts("  - brainfuck programs have access to 30,000 8-bit cells.");
+      printf("  - brainfuck programs have access to %d 8-bit cells.\n",
+          NUMBER_OF_CELLS);
       puts("  - The cell array does not extend dynamically.");
       printf("  - When accepting input, EOF is equal to %d.\n\n", EOF);
       printf("Usage: %s [options] [- | programfile]\n", argv[0]);

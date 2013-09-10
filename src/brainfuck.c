@@ -31,9 +31,10 @@ brainfuck_evaluate_status brainfuck_evaluate(brainfuck_tape *tape,
   brainfuck_evaluate_status status = { BRAINFUCK_EVALUATE_SUCCESS, NULL, 0 };
   for (unsigned int index = 0; commands[index] != '\0'; index++) {
     switch (commands[index]) {
-      case '>':
-      case '<':
-        tape->data_pointer += (commands[index] == '>' ? 1 : -1);
+      case BRAINFUCK_COMMAND_POINTER_DECREMENT:
+      case BRAINFUCK_COMMAND_POINTER_INCREMENT:
+        tape->data_pointer +=
+            (commands[index] == BRAINFUCK_COMMAND_POINTER_INCREMENT ? 1 : -1);
         if ((tape->data_pointer < tape->data) ||
             (tape->data_pointer) > (tape->data + tape->cell_count)) {
           status.return_code = BRAINFUCK_EVALUATE_FAILURE;
@@ -43,31 +44,37 @@ brainfuck_evaluate_status brainfuck_evaluate(brainfuck_tape *tape,
           return status;
         }
         break;
-      case '+':
-      case '-':
-        *tape->data_pointer += commands[index] == '+' ? 1 : -1;
+      case BRAINFUCK_COMMAND_VALUE_DECREMENT:
+      case BRAINFUCK_COMMAND_VALUE_INCREMENT:
+        *tape->data_pointer +=
+            commands[index] == BRAINFUCK_COMMAND_VALUE_INCREMENT ? 1 : -1;
         break;
-      case '.':
+      case BRAINFUCK_COMMAND_OUTPUT:
         (*output_function)((int)*(tape->data_pointer));
         break;
-      case ',':
+      case BRAINFUCK_COMMAND_INPUT:
         *(tape->data_pointer) = (int8_t)(*input_function)();
         break;
-      case '[':
-      case ']':
-        if ((*(tape->data_pointer) == 0 && commands[index] == '[') ||
-           (*(tape->data_pointer) != 0 && commands[index] == ']')) {
+      case BRAINFUCK_COMMAND_LOOP_BEGIN:
+      case BRAINFUCK_COMMAND_LOOP_END:
+        if ((*(tape->data_pointer) == 0 &&
+              commands[index] == BRAINFUCK_COMMAND_LOOP_BEGIN) ||
+              (*(tape->data_pointer) != 0 &&
+              commands[index] == BRAINFUCK_COMMAND_LOOP_END)) {
           unsigned int loop_depth = 1;
           unsigned int loop_start_index = index;
           while (loop_depth > 0) {
-            if (commands[commands[loop_start_index] == '[' ? ++index : --index]
-                  == '[') {
-              commands[loop_start_index] == '[' ? loop_depth++ : loop_depth--;
-            } else if (commands[index] == ']') {
-              commands[loop_start_index] == '[' ? loop_depth-- : loop_depth++;
-            /* TODO: Open loops should be checked for beforehand. */
+            if (commands[commands[loop_start_index]
+                  == BRAINFUCK_COMMAND_LOOP_BEGIN ? ++index : --index]
+                  == BRAINFUCK_COMMAND_LOOP_BEGIN) {
+              commands[loop_start_index] == BRAINFUCK_COMMAND_LOOP_BEGIN ?
+                  loop_depth++ : loop_depth--;
+            } else if (commands[index] == BRAINFUCK_COMMAND_LOOP_END) {
+              commands[loop_start_index] == BRAINFUCK_COMMAND_LOOP_BEGIN ?
+                  loop_depth-- : loop_depth++;
             } else if (commands[index] == '\0' || index == 0) {
               status.return_code = BRAINFUCK_EVALUATE_FAILURE;
+              /* TODO: Update error message to use symbolic constants. */
               status.error_message = "Unmatched \"[\" or \"]\".";
               status.offending_command_position = loop_start_index;
               return status;
