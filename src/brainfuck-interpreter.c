@@ -7,7 +7,6 @@
 */
 
 #include <errno.h>
-#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -43,7 +42,7 @@ int main(int argc, char **argv)
       exit(EXIT_FAILURE);
     }
   }
-  while (true) {
+  while (1) {
     char character = getc(brainfuck_stream);
     char *new_commands = realloc(commands,
         ++number_of_commands * sizeof(char));
