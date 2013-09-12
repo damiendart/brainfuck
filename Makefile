@@ -2,7 +2,7 @@
 # and unencumbered software released into the public domain. For more
 # information, please refer to the accompanying "UNLICENCE" file.
 
-INTERPRETER_SOURCES = src/brainfuck-interpreter.c src/brainfuck.c
+INTERPRETER_SOURCES = src/interpreter.c src/brainfuck.c
 CFLAGS = -pedantic -std=c99 -Wall -Wextra -Werror
 
 .PHONY: all clean
