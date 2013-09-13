@@ -43,9 +43,8 @@ int main(int argc, char **argv)
     }
   }
   while (1) {
-    char character = getc(brainfuck_stream);
-    char *new_commands = realloc(commands,
-        ++number_of_commands * sizeof(char));
+    char character = fgetc(brainfuck_stream);
+    char *new_commands = realloc(commands, ++number_of_commands * sizeof(char));
     if (new_commands == NULL) {
       free(commands);
       perror("Unable to create command list");
@@ -66,8 +65,15 @@ int main(int argc, char **argv)
     fclose(brainfuck_stream);
   }
   status = brainfuck_evaluate(tape, commands, getchar, putchar);
-  if (status.return_code != BRAINFUCK_EVALUATE_SUCCESS) {
-    puts(status.error_message);
+  if (status.return_code == BRAINFUCK_EVALUATE_FAILURE) {
+    unsigned int line_number = 1;
+    unsigned int character_offset = 1;
+    for (unsigned int i = 0; i != status.offending_command_position; i++) {
+      line_number += commands[i] == '\n' ? 1 : 0;
+      character_offset = commands[i] == '\n' ? 0 : character_offset + 1;
+    }
+    printf("%s:%d:%d: ERROR: %s\n", brainfuck_stream == stdin ? "-" : argv[1],
+        line_number, character_offset, status.error_message);
   }
   brainfuck_freeTape(tape, free);
   free(commands);
