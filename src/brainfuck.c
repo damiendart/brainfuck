@@ -34,7 +34,7 @@ brainfuck_evaluate_status brainfuck_evaluate(brainfuck_tape *tape,
       case BRAINFUCK_COMMAND_POINTER_DECREMENT:
       case BRAINFUCK_COMMAND_POINTER_INCREMENT:
         tape->data_pointer +=
-            (commands[index] == BRAINFUCK_COMMAND_POINTER_INCREMENT ? 1 : -1);
+            commands[index] == BRAINFUCK_COMMAND_POINTER_INCREMENT ? 1 : -1;
         if ((tape->data_pointer < tape->data) ||
             (tape->data_pointer) > (tape->data + tape->cell_count)) {
           status.return_code = BRAINFUCK_EVALUATE_FAILURE;

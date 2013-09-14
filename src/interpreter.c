@@ -77,6 +77,6 @@ int main(int argc, char **argv)
   }
   brainfuck_freeTape(tape, free);
   free(commands);
-  return (status.return_code == BRAINFUCK_EVALUATE_SUCCESS ?
-      EXIT_SUCCESS : EXIT_FAILURE);
+  return status.return_code == BRAINFUCK_EVALUATE_SUCCESS ?
+      EXIT_SUCCESS : EXIT_FAILURE;
 }
