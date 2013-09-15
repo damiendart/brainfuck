@@ -25,10 +25,11 @@ int main(int argc, char **argv)
   FILE *brainfuck_stream = stdin;
   if ((argc != 1) && (strcmp(argv[1], "-") != 0)) {
     if ((strcmp(argv[1], "-h") == 0) || (strcmp(argv[1], "--help") == 0)) {
-      printf("\"%s\" is a simple brainfuck interpreter.\n\n", argv[0]);
+      printf("\"%s\" is a nice brainfuck interpreter.\n\n", argv[0]);
       printf("  - brainfuck programs have access to %d %d-bit cells.\n",
           NUMBER_OF_CELLS, (int)sizeof(tape->data[0]) * 8);
-      puts("  - The cell array does not extend dynamically.");
+      /* FIXME: Rewrite this poorly worded bullet-point. */
+      puts("  - Integer wraparound, yo.");
       printf("  - When accepting input, EOF is equal to %d.\n\n", EOF);
       printf("Usage: %s [options] [- | programfile]\n", argv[0]);
       puts("Options:\n  -h, --help    Print this message.");
