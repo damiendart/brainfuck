@@ -28,8 +28,7 @@ int main(int argc, char **argv)
       printf("\"%s\" is a nice brainfuck interpreter.\n\n", argv[0]);
       printf("  - brainfuck programs have access to %d %d-bit cells.\n",
           NUMBER_OF_CELLS, (int)sizeof(tape->data[0]) * 8);
-      /* FIXME: Rewrite this poorly worded bullet-point. */
-      puts("  - Integer wraparound, yo.");
+      puts("  - Integer overflow results in wrap-around.");
       printf("  - When accepting input, EOF is equal to %d.\n\n", EOF);
       printf("Usage: %s [options] [- | programfile]\n", argv[0]);
       puts("Options:\n  -h, --help    Print this message.");

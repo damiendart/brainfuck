@@ -88,7 +88,8 @@ brainfuck_evaluate_status brainfuck_evaluate(brainfuck_tape *tape,
 }
 
 void brainfuck_freeTape(brainfuck_tape *tape,
-    void (deallocator_function)(void *)) {
+    void (deallocator_function)(void *))
+{
   (*deallocator_function)(tape->data);
   (*deallocator_function)(tape);
 }
