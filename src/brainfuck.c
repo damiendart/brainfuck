@@ -32,17 +32,16 @@ brainfuck_evaluate_status brainfuck_evaluate(brainfuck_tape *tape,
 {
   brainfuck_evaluate_status status = { BRAINFUCK_EVALUATE_SUCCESS, NULL, 0 };
   for (unsigned int index = 0; commands[index] != '\0'; index++) {
-    if ((commands[index] == BRAINFUCK_COMMAND_LOOP_BEGIN) ||
-        (commands[index] == BRAINFUCK_COMMAND_LOOP_END)) {
-      if (_brainfuck_find_matching_loop_command(commands, index) < 0) {
-        status.return_code = BRAINFUCK_EVALUATE_FAILURE;
-        /* TODO: Update error message to use symbolic constants. */
-        status.error_message = "Unmatched \"[\" or \"]\".";
-        status.offending_command_position = index;
-        return status;
+    if (((commands[index] == BRAINFUCK_COMMAND_LOOP_BEGIN) ||
+        (commands[index] == BRAINFUCK_COMMAND_LOOP_END)) &&
+        (_brainfuck_find_matching_loop_command(commands, index) < 0)) {
+      status.return_code = BRAINFUCK_EVALUATE_FAILURE;
+      /* TODO: Update error message to use symbolic constants. */
+      status.error_message = "Unmatched \"[\" or \"]\".";
+      status.offending_command_position = index;
+      return status;
       }
     }
-  }
   for (unsigned int index = 0; commands[index] != '\0'; index++) {
     switch (commands[index]) {
       case BRAINFUCK_COMMAND_POINTER_DECREMENT:
