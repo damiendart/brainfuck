@@ -104,6 +104,10 @@ static int _brainfuck_find_matching_loop_command(const char *commands,
 {
   unsigned int loop_depth = 1;
   int index = loop_start_index;
+  if (commands[loop_start_index] != BRAINFUCK_COMMAND_LOOP_BEGIN &&
+      commands[loop_start_index] != BRAINFUCK_COMMAND_LOOP_END) {
+    return -1;
+  }
   while (loop_depth > 0) {
     if (commands[commands[loop_start_index]
           == BRAINFUCK_COMMAND_LOOP_BEGIN ? ++index : --index]
