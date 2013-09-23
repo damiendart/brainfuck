@@ -23,8 +23,8 @@ int main(int argc, char **argv)
   brainfuck_evaluate_status status;
   brainfuck_tape *tape = brainfuck_createTape(NUMBER_OF_CELLS, malloc);
   FILE *brainfuck_stream = stdin;
-  if ((argc != 1) && (strcmp(argv[1], "-") != 0)) {
-    if ((strcmp(argv[1], "-h") == 0) || (strcmp(argv[1], "--help") == 0)) {
+  if (argc != 1 && strcmp(argv[1], "-") != 0) {
+    if (strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "--help") == 0) {
       printf("\"%s\" is a nice brainfuck interpreter.\n\n", argv[0]);
       printf("  - brainfuck programs have access to %d %d-bit cells.\n",
           NUMBER_OF_CELLS, (int)sizeof(tape->data[0]) * 8);
