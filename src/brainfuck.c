@@ -1,5 +1,5 @@
 /*
- * A simple brainfuck library.
+ * A simple brainfuck intepreter library.
  *
  * This file was written by Damien Dart, <damiendart@pobox.com>. This is free
  * and unencumbered software released into the public domain. For more
@@ -14,10 +14,10 @@
 static int _brainfuck_find_matching_loop_command(const char *, unsigned int);
 
 brainfuck_tape *brainfuck_createTape(unsigned int number_of_cells,
-    void *(*allocator_function)(size_t))
+    void *(*memory_allocator_function)(size_t))
 {
-  brainfuck_tape *tape = (*allocator_function)(sizeof(brainfuck_tape));
-  tape->data = (*allocator_function)(number_of_cells * sizeof(int8_t));
+  brainfuck_tape *tape = (*memory_allocator_function)(sizeof(brainfuck_tape));
+  tape->data = (*memory_allocator_function)(number_of_cells * sizeof(int8_t));
   for (unsigned int i = 0; i < number_of_cells; i++) {
     tape->data[i] = 0;
   }
@@ -27,8 +27,8 @@ brainfuck_tape *brainfuck_createTape(unsigned int number_of_cells,
 }
 
 brainfuck_evaluate_status brainfuck_evaluate(brainfuck_tape *tape,
-    const char *commands, int (*input_function)(void),
-    int (*output_function)(int))
+    const char *commands, int (*input_handler_function)(void),
+    int (*output_handler_function)(int))
 {
   brainfuck_evaluate_status status = { BRAINFUCK_EVALUATE_SUCCESS, NULL, 0 };
   for (unsigned int index = 0; commands[index] != '\0'; index++) {
@@ -63,10 +63,10 @@ brainfuck_evaluate_status brainfuck_evaluate(brainfuck_tape *tape,
             commands[index] == BRAINFUCK_COMMAND_VALUE_INCREMENT ? 1 : -1;
         break;
       case BRAINFUCK_COMMAND_OUTPUT:
-        (*output_function)((int)*(tape->data_pointer));
+        (*output_handler_function)((int)*(tape->data_pointer));
         break;
       case BRAINFUCK_COMMAND_INPUT:
-        *(tape->data_pointer) = (int8_t)(*input_function)();
+        *(tape->data_pointer) = (int8_t)(*input_handler_function)();
         break;
       case BRAINFUCK_COMMAND_LOOP_BEGIN:
       case BRAINFUCK_COMMAND_LOOP_END:
@@ -93,10 +93,10 @@ brainfuck_evaluate_status brainfuck_evaluate(brainfuck_tape *tape,
 }
 
 void brainfuck_freeTape(brainfuck_tape *tape,
-    void (deallocator_function)(void *))
+    void (memory_deallocator_function)(void *))
 {
-  (*deallocator_function)(tape->data);
-  (*deallocator_function)(tape);
+  (*memory_deallocator_function)(tape->data);
+  (*memory_deallocator_function)(tape);
 }
 
 static int _brainfuck_find_matching_loop_command(const char *commands,

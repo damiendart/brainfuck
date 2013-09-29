@@ -1,5 +1,5 @@
 /*
- * A simple brainfuck library.
+ * A simple brainfuck intepreter library.
  *
  * This file was written by Damien Dart, <damiendart@pobox.com>. This is free
  * and unencumbered software released into the public domain. For more
@@ -36,9 +36,12 @@ typedef struct brainfuck_tape {
   unsigned int cell_count;
 } brainfuck_tape;
 
-brainfuck_tape *brainfuck_createTape(unsigned int, void *(size_t));
-brainfuck_evaluate_status brainfuck_evaluate(brainfuck_tape *, const char *,
-    int(void), int(int));
-void brainfuck_freeTape(brainfuck_tape *, void(void *));
+brainfuck_tape *brainfuck_createTape(unsigned int number_of_cells,
+    void *(*memory_allocator_function)(size_t));
+brainfuck_evaluate_status brainfuck_evaluate(brainfuck_tape *tape,
+    const char *commands, int (*input_handler_function)(void),
+    int (*output_handler_function)(int));
+void brainfuck_freeTape(brainfuck_tape *tape,
+    void (memory_deallocator_function)(void *));
 
 #endif

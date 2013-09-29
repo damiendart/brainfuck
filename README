@@ -1,6 +1,6 @@
 brainfuck
 =========
 
-Yet another [Brainfuck][1] interpreter written in C. 
+Yet another [brainfuck][1] interpreter written in C.
 
 [1]: <http://en.wikipedia.org/wiki/Brainfuck>
