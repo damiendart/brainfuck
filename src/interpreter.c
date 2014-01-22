@@ -54,15 +54,15 @@ int main(int argc, char **argv)
     }
     if (character == EOF) {
       commands[number_of_commands - 1] = '\0';
+      if (brainfuck_stream == stdin) {
+        clearerr(stdin);
+      } else {
+        fclose(brainfuck_stream);
+      }
       break;
     } else {
       commands[number_of_commands - 1] = character;
     }
-  }
-  if (brainfuck_stream == stdin) {
-    clearerr(stdin);
-  } else {
-    fclose(brainfuck_stream);
   }
   if ((tape = brainfuck_createTape(NUMBER_OF_CELLS, malloc, free)) == NULL) {
     free(commands);
@@ -77,8 +77,9 @@ int main(int argc, char **argv)
       line_number += commands[i] == '\n' ? 1 : 0;
       character_offset = commands[i] == '\n' ? 0 : character_offset + 1;
     }
-    printf("%s:%d:%d: ERROR: %s\n", brainfuck_stream == stdin ? "-" : argv[1],
-        line_number, character_offset, status.error_message);
+    fprintf(stderr, "%s:%d:%d: ERROR: %s\n",
+        brainfuck_stream == stdin ? "-" : argv[1], line_number,
+        character_offset, status.error_message);
   }
   brainfuck_freeTape(tape, free);
   free(commands);
