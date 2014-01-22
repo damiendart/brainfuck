@@ -37,7 +37,8 @@ typedef struct brainfuck_tape {
 } brainfuck_tape;
 
 brainfuck_tape *brainfuck_createTape(unsigned int number_of_cells,
-    void *(*memory_allocator_function)(size_t));
+    void *(*memory_allocator_function)(size_t),
+    void (memory_deallocator_function)(void *));
 brainfuck_evaluate_status brainfuck_evaluate(brainfuck_tape *tape,
     const char *commands, int (*input_handler_function)(void),
     int (*output_handler_function)(int));

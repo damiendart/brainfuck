@@ -21,7 +21,7 @@ int main(int argc, char **argv)
   char *commands = NULL;
   unsigned int number_of_commands = 0;
   brainfuck_evaluate_status status;
-  brainfuck_tape *tape = brainfuck_createTape(NUMBER_OF_CELLS, malloc);
+  brainfuck_tape *tape = NULL;
   FILE *brainfuck_stream = stdin;
   if (argc != 1 && strcmp(argv[1], "-") != 0) {
     if (strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "--help") == 0) {
@@ -63,6 +63,11 @@ int main(int argc, char **argv)
     clearerr(stdin);
   } else {
     fclose(brainfuck_stream);
+  }
+  if ((tape = brainfuck_createTape(NUMBER_OF_CELLS, malloc, free)) == NULL) {
+    free(commands);
+    perror("Unable to create brainfuck memory tape");
+    exit(EXIT_FAILURE);
   }
   status = brainfuck_evaluate(tape, commands, getchar, putchar);
   if (status.return_code == BRAINFUCK_EVALUATE_FAILURE) {

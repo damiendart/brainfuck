@@ -14,15 +14,21 @@
 static int _brainfuck_find_matching_loop_command(const char *, unsigned int);
 
 brainfuck_tape *brainfuck_createTape(unsigned int number_of_cells,
-    void *(*memory_allocator_function)(size_t))
+    void *(*memory_allocator_function)(size_t),
+    void (memory_deallocator_function)(void *))
 {
   brainfuck_tape *tape = (*memory_allocator_function)(sizeof(brainfuck_tape));
-  tape->data = (*memory_allocator_function)(number_of_cells * sizeof(int8_t));
-  for (unsigned int i = 0; i < number_of_cells; i++) {
-    tape->data[i] = 0;
+  if ((tape == NULL) || ((tape->data = (*memory_allocator_function)(
+      number_of_cells * sizeof(int8_t))) == NULL)) {
+    brainfuck_freeTape(tape, memory_deallocator_function);
+    return NULL;
+  } else {
+    for (unsigned int i = 0; i < number_of_cells; i++) {
+      tape->data[i] = 0;
+    }
+    tape->data_pointer = tape->data;
+    tape->cell_count = number_of_cells;
   }
-  tape->data_pointer = tape->data;
-  tape->cell_count = number_of_cells;
   return tape;
 }
 
