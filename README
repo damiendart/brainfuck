@@ -1,6 +1,29 @@
 brainfuck
 =========
 
-Yet another [brainfuck][1] interpreter written in C.
+Yet another [nice][1] [brainfuck][2] interpreter written in C.
 
-[1]: <http://en.wikipedia.org/wiki/Brainfuck>
+[1]: <http://www.muppetlabs.com/~breadbox/bf/standards.html>
+[2]: <http://en.wikipedia.org/wiki/Brainfuck>
+
+
+Synopsis
+--------
+
+    $ git clone -q https://github.com/damiendart/brainfuck.git
+    $ # <http://www.robotinaponcho.net/git/brainfuck.git> works too.
+    $ cd brainfuck
+    $ make clean all > /dev/null
+    $ ./brainfuck examples/helloworld.bf
+    Hello, World!
+    $ cat examples/helloworld.bf | ./brainfuck
+    Hello, World!
+    $ # ./brainfuck --help
+
+
+Licence
+-------
+
+`brainfuck` was written by Damien Dart, <damiendart@pobox.com>. This is
+free and unencumbered software released into the public domain. For more
+information, please refer to the accompanying "UNLICENCE" file.
