@@ -12,20 +12,24 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#define BRAINFUCK_COMMAND_INPUT ','
-#define BRAINFUCK_COMMAND_LOOP_BEGIN '['
-#define BRAINFUCK_COMMAND_LOOP_END ']'
-#define BRAINFUCK_COMMAND_OUTPUT '.'
-#define BRAINFUCK_COMMAND_POINTER_DECREMENT '<'
-#define BRAINFUCK_COMMAND_POINTER_INCREMENT '>'
-#define BRAINFUCK_COMMAND_VALUE_DECREMENT '-'
-#define BRAINFUCK_COMMAND_VALUE_INCREMENT '+'
+typedef enum brainfuck_commands {
+  BRAINFUCK_COMMAND_INPUT = ',',
+  BRAINFUCK_COMMAND_LOOP_BEGIN = '[',
+  BRAINFUCK_COMMAND_LOOP_END = ']',
+  BRAINFUCK_COMMAND_OUTPUT = '.',
+  BRAINFUCK_COMMAND_POINTER_DECREMENT = '<',
+  BRAINFUCK_COMMAND_POINTER_INCREMENT = '>',
+  BRAINFUCK_COMMAND_VALUE_DECREMENT = '-',
+  BRAINFUCK_COMMAND_VALUE_INCREMENT = '+'
+} brainfuck_commands;
 
-#define BRAINFUCK_EVALUATE_SUCCESS 0
-#define BRAINFUCK_EVALUATE_FAILURE 1
+typedef enum brainfuck_evaluate_return_code {
+  BRAINFUCK_EVALUATE_SUCCESS,
+  BRAINFUCK_EVALUATE_FAILURE
+} brainfuck_evaluate_return_code;
 
 typedef struct brainfuck_evaluate_status {
-  int return_code;
+  brainfuck_evaluate_return_code return_code;
   const char *error_message;
   unsigned int offending_command_position;
 } brainfuck_evaluate_status;
