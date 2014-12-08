@@ -1,5 +1,5 @@
 /*
- * A simple brainfuck intepreter library.
+ * A simple brainfuck interpreter library.
  *
  * This file was written by Damien Dart, <damiendart@pobox.com>. This is
  * free and unencumbered software released into the public domain. For
@@ -30,8 +30,8 @@ typedef enum brainfuck_evaluate_return_code {
 
 typedef struct brainfuck_evaluate_status {
   brainfuck_evaluate_return_code return_code;
-  const char *error_message;
-  unsigned int offending_command_position;
+  const char *error_message; /* Will be "NULL" if successful. */
+  unsigned int offending_command_position; /* Will be 0 if successful. */
 } brainfuck_evaluate_status;
 
 typedef struct brainfuck_tape {

@@ -21,6 +21,21 @@ Synopsis
     $ # ./brainfuck --help
 
 
+Embedding brainfuck
+-------------------
+
+This implementation of brainfuck is easy to embed into a C/C++ project:
+simply add "src/brainfuck.h" and "src/brainfuck.c" to the build and call
+the simple Lua-style API to get (kinda) instant brainfuck. For more
+information, see "src/brainfuck.h".
+
+
+Testing
+-------
+
+COMING SOON (MAYBE).
+
+
 Licence
 -------
 
