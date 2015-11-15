@@ -1,0 +1,6 @@
+TODO
+====
+
+  * Write a simple brainfuck-to-C doohickey.
+  * Write tests for the API.
+  * Write tests for the interpreter.
